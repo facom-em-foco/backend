@@ -1,0 +1,27 @@
+# compiled output
+/dist
+/node_modules
+
+# Logs
+logs
+*.log
+
+# OS
+.DS_Store
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+
+# tests coverage
+/coverage
+
+# stryker temp files
+.stryker-tmp
+
+launch.json
+
+package-lock.json
+.env.test
+.env
