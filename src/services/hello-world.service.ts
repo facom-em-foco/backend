@@ -1,45 +1,29 @@
-import { ErrorNotification } from '@/commons/class/error-notification';
-import { ErrorKeysEnum } from '@/commons/enums/error-keys.enum';
-import { HttpStatusCode } from '@/commons/enums/http-status-code.enum';
-import {
-  ErrorResponse,
-  SuccessResponse,
-} from '@/commons/interfaces/generic-response.interface';
-import { HttpRequest } from '@/commons/interfaces/http-request.interface';
-import {
-  parseErrorResponse,
-  parseSuccessResponse,
-} from '@/commons/parsers/response.parser';
+import { ErrorNotification } from '@/contracts/api/error-notification';
+import { ErrorKeysEnum } from '@/enums/error-keys.enum';
+import { HttpStatusCode } from '@/enums/http-status-code.enum';
+import { HelloWorldRequestDTO } from '@/interfaces/dtos/request/hello-world-request.dto';
+import { HelloWorldResponseDTO } from '@/interfaces/dtos/response/hello-world-response.dto';
+import HelloWorldParser from '@/parsers/hello-world.parser';
 
-export const helloWorldService = async (
-  httpRequest: HttpRequest,
-): Promise<SuccessResponse | ErrorNotification | ErrorResponse> => {
-  try {
-    const msg = 'Hello World! TypeScript with Express!';
+export default class HelloWorldService {
+  async helloWorld(data: HelloWorldRequestDTO): Promise<HelloWorldResponseDTO> {
+    const { parserHelloWorldResponse } = HelloWorldParser;
 
-    const response = {
-      data: { msg },
-      headers: {},
-    };
+    const test = (
+      data.msg || 'Hello World Node.js with Typescript!'
+    ).toUpperCase();
 
-    return parseSuccessResponse(response.headers, response.data);
-  } catch (error) {
-    return parseErrorResponse(error, httpRequest.headers);
+    const desc = (data.description || 'Lorem Description...').toLowerCase();
+
+    return parserHelloWorldResponse({ test, desc });
   }
-};
 
-export const helloWorldErrorService = async (
-  httpRequest: HttpRequest,
-): Promise<SuccessResponse | ErrorNotification | ErrorResponse> => {
-  try {
+  async helloWorldError(): Promise<any> {
     throw new ErrorNotification({
       message: 'Error Anywhere!',
       errorKey: ErrorKeysEnum.EXTERNAL_ERROR,
       errorDescription: 'External Errors Description',
       status: HttpStatusCode.BAD_REQUEST,
-      headers: httpRequest.headers,
     });
-  } catch (error) {
-    return parseErrorResponse(error, httpRequest.headers);
   }
-};
+}

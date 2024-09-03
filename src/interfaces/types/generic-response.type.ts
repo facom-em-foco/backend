@@ -1,5 +1,5 @@
-import { ErrorNotification } from '../class/error-notification';
-import { ApiError } from './api-error.interface';
+import { ErrorNotification } from '../../contracts/api/error-notification';
+import { ApiError } from './api-error.type';
 
 export interface SuccessResponse {
   status: number;

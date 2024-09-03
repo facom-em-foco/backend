@@ -1,39 +1,41 @@
 import { Request, Response } from 'express';
-import { HttpRequest } from '@/commons/interfaces/http-request.interface';
+import { HttpStatusCode } from '@/enums/http-status-code.enum';
+import HelloWorldService from '@/services/hello-world.service';
+import { httpRequestHelper } from '@/helpers/http-request-helper';
 import {
-  helloWorldErrorService,
-  helloWorldService,
-} from '@/services/hello-world.service';
+  sendErrorResponse,
+  sendSuccessResponse,
+} from '@/helpers/response-helper';
 
-const helloWorld = async (req: Request, res: Response): Promise<void> => {
-  const httpRequest: HttpRequest = {
-    body: req.body,
-    query: req.query,
-    headers: req.headers,
-  };
+export default class HelloWorldController {
+  private helloWorldService: HelloWorldService;
 
-  const response = await helloWorldService(httpRequest);
+  constructor() {
+    this.helloWorldService = new HelloWorldService();
+  }
 
-  res.status(response.status);
-  res.header(response.headers);
-  res.send(response.data);
-};
+  async helloWorld(req: Request, res: Response): Promise<void> {
+    const { query, headers } = httpRequestHelper(req);
 
-const helloWorldError = async (req: Request, res: Response): Promise<void> => {
-  const httpRequest: HttpRequest = {
-    body: req.body,
-    query: req.query,
-    headers: req.headers,
-  };
+    try {
+      const data = await this.helloWorldService.helloWorld(query);
 
-  const response = await helloWorldErrorService(httpRequest);
+      sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
+    } catch (error) {
+      console.log(error);
+      sendErrorResponse(res, error, headers);
+    }
+  }
 
-  res.status(response.status);
-  res.header(response.headers);
-  res.send(response.data);
-};
+  async helloWorldError(req: Request, res: Response): Promise<void> {
+    const { headers } = httpRequestHelper(req);
 
-export const HelloWorldController = {
-  helloWorld,
-  helloWorldError,
-};
+    try {
+      const data = await this.helloWorldService.helloWorldError();
+
+      sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
+    } catch (error) {
+      sendErrorResponse(res, error, headers);
+    }
+  }
+}

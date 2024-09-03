@@ -4,10 +4,11 @@ import { HttpStatusCode } from '../enums/http-status-code.enum';
 import {
   SuccessResponse,
   ErrorResponse,
-} from '../interfaces/generic-response.interface';
-import { ApiError } from '../interfaces/api-error.interface';
+} from '../interfaces/types/generic-response.type';
+import { ApiError } from '../interfaces/types/api-error.type';
 import { ErrorKeysEnum } from '../enums/error-keys.enum';
-import { ErrorNotification } from '../class/error-notification';
+import { ErrorNotification } from '../contracts/api/error-notification';
+import { Response } from 'express';
 
 const defaultSuccessResponse = { success: true };
 
@@ -19,9 +20,10 @@ const defaultErrorResponse: ApiError = {
 export const parseSuccessResponse = (
   headers: IncomingHttpHeaders,
   data?: any,
+  status = HttpStatusCode.OK,
 ): SuccessResponse => {
   return {
-    status: HttpStatusCode.OK,
+    status,
     headers: {
       ...headers,
       'Content-Type': 'application/json',
@@ -38,7 +40,7 @@ export const parseErrorResponse = (
   if (error instanceof ErrorNotification) {
     return {
       status: error.status || HttpStatusCode.INTERNAL_SERVER_ERROR,
-      headers: error.headers,
+      headers: error.headers || headers,
       data: error.data,
     };
   }
@@ -53,4 +55,30 @@ export const parseErrorResponse = (
     },
     data: _.isEmpty(error) ? defaultErrorResponse : error,
   };
+};
+
+export const sendSuccessResponse = (
+  res: Response,
+  data: any,
+  headers: IncomingHttpHeaders,
+  status?: number,
+): void => {
+  const response: SuccessResponse = parseSuccessResponse(headers, data, status);
+  res.status(response.status);
+  res.header(response.headers);
+  res.send(response.data);
+};
+
+export const sendErrorResponse = (
+  res: Response,
+  error: any,
+  headers: IncomingHttpHeaders,
+): void => {
+  const response: ErrorResponse | ErrorNotification = parseErrorResponse(
+    error,
+    headers,
+  );
+  res.status(response.status);
+  res.header(response.headers);
+  res.send(response.data);
 };

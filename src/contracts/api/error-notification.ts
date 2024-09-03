@@ -1,5 +1,5 @@
 import { IncomingHttpHeaders } from 'http2';
-import { ErrorNotificationParams } from '../interfaces/error-notification.interface';
+import { ErrorNotificationParams } from '../../interfaces/types/error-notification.type';
 
 export class ErrorNotification {
   readonly status: number;
@@ -19,6 +19,6 @@ export class ErrorNotification {
       errorDescription: params.errorDescription,
     };
     this.status = params.status;
-    this.headers = params.headers;
+    this.headers = params.headers || {};
   }
 }

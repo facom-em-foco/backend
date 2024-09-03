@@ -5,5 +5,5 @@ export type ErrorNotificationParams = {
   status: number;
   errorKey?: number;
   errorDescription?: string;
-  headers: IncomingHttpHeaders;
+  headers?: any;
 };
