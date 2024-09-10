@@ -1,1 +1,6 @@
 src/* @facom-em-foco/Back-end
+.github @facom-em-foco/DevOps
+.gitignore @facom-em-foco/DevOps
+.prettierrc @facom-em-foco/DevOps
+.package.json @facom-em-foco/DevOps
+.tsconfig.json @facom-em-foco/DevOps
