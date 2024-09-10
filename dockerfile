@@ -1,20 +1,20 @@
-# Use uma imagem base do Node.js
+# Use a base image of Node.js
 FROM node:20
 
-# Defina o diretório de trabalho no container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copie os arquivos package.json e package-lock.json para o diretório de trabalho
+# Copy the package.json and package-lock.json files to the working directory
 COPY package*.json ./
 
-# Instale as dependências
+# Install the dependencies
 RUN npm install
 
-# Copie todo o código para o diretório de trabalho
+# Copy all the code to the working directory
 COPY . .
 
-# Exponha a porta em que a aplicação será executada
+# Expose the port on which the application will run
 EXPOSE 3000
 
-# Comando para rodar a aplicação
+# Command to run the application
 CMD ["npm", "run", "start:dev"]
