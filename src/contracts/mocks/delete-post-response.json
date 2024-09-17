@@ -1,0 +1,13 @@
+{
+  "postId": "1",
+  "title": "Vaga de estágio da empresa tal",
+  "description": "Vaga de Estágio: Aberta oportunidade para alunos de Engenharia de Software no CIEVS-MS. Carga horária de 20h/semana, bolsa auxílio, oportunidade de aprendizado em análise de dados e desenvolvimento web. Inscrições até 20/09. Envie seu currículo para email@example.com. Não perca!",
+  "link": "https://teste.com",
+  "postDate": "2024-09-16T15:30:00Z",
+  "expireDate": "2024-10-16T01:30:00Z",
+  "tags": ["ESTAGIO", "BOLSAS"],
+  "publisherId": "123",
+  "publisherName": "Nicolas Shogo",
+  "creationDate": "2024-10-16T01:30:00Z",
+  "editionDate": "2024-10-16T01:30:00Z"
+}
