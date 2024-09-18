@@ -1,8 +1,8 @@
 import { ErrorNotification } from '@/contracts/api/error-notification';
 import { ErrorKeysEnum } from '@/enums/error-keys.enum';
 import { HttpStatusCode } from '@/enums/http-status-code.enum';
-import { HelloWorldRequestDTO } from '@/interfaces/dtos/request/hello-world-request.dto';
-import { HelloWorldResponseDTO } from '@/interfaces/dtos/response/hello-world-response.dto';
+import { HelloWorldRequestDTO } from '@/contracts/dtos/request/hello-world-request.dto';
+import { HelloWorldResponseDTO } from '@/contracts/dtos/response/hello-world-response.dto';
 import HelloWorldParser from '@/parsers/hello-world.parser';
 
 export default class HelloWorldService {

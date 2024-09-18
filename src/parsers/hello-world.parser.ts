@@ -1,4 +1,4 @@
-import { HelloWorldResponseDTO } from '@/interfaces/dtos/response/hello-world-response.dto';
+import { HelloWorldResponseDTO } from '@/contracts/dtos/response/hello-world-response.dto';
 
 export default class HelloWorldParser {
   static parserHelloWorldResponse(data: any): HelloWorldResponseDTO {

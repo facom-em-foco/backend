@@ -8,7 +8,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && tscpaths -s ./src -o ./dist",
     "start": "node dist/index.js",
-    "start:dev": "ts-node-dev -r tsconfig-paths/register src/index.ts"
+    "start:dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
+    "dkr:start": "docker compose up --build",
+    "dkr:dev": "docker compose up app",
+    "dkr:down": "docker compose down -v"
   },
   "keywords": [],
   "author": "",

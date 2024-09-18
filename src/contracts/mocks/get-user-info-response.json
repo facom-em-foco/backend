@@ -1,0 +1,9 @@
+{
+  "userId": "1",
+  "name": "João Pedro Figueiredo",
+  "email": "teste@email.com",
+  "registrationDate": "2003-10-16",
+  "active": true,
+  "isAdmin": true,
+  "totalPosts": 10
+}

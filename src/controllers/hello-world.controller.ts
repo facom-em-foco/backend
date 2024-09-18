@@ -22,7 +22,6 @@ export default class HelloWorldController {
 
       sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
     } catch (error) {
-      console.log(error);
       sendErrorResponse(res, error, headers);
     }
   }
