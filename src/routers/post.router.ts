@@ -5,7 +5,8 @@ const postController = new PostController();
 const postRouter = Router();
 
 postRouter.post('/post', postController.createPost.bind(postController));
-postRouter.get('/post/:id', postController.getPostById.bind(postController));
 postRouter.get('/post', postController.getAllPosts.bind(postController));
+postRouter.get('/post/:id', postController.getPostById.bind(postController));
+postRouter.patch('/post/:id', postController.editPost.bind(postController));
 
 export default postRouter;

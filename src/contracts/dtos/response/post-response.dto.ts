@@ -22,3 +22,5 @@ export interface GetAllPostsResponseDTO {
 }
 
 export interface CreatePostResponseDTO extends GetPostByIdResponseDTO {}
+
+export interface EditPostResponseDTO extends GetPostByIdResponseDTO {}

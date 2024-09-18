@@ -17,3 +17,7 @@ export interface CreatePostRequestDTO {
   expireDate: string;
   tags: string[];
 }
+
+export interface EditPostRequestDTO extends CreatePostRequestDTO {
+  id: string;
+}
