@@ -10,7 +10,7 @@ export interface GetPostByIdResponseDTO {
   publisherId: string;
   publisherName: string;
   creationDate: string;
-  editionDate: string;
+  editionDate?: string;
 }
 
 export interface GetAllPostsResponseDTO {
@@ -20,3 +20,5 @@ export interface GetAllPostsResponseDTO {
   totalPages: number;
   data: GetPostByIdResponseDTO[];
 }
+
+export interface CreatePostResponseDTO extends GetPostByIdResponseDTO {}

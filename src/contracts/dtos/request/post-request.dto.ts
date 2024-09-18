@@ -8,3 +8,12 @@ export interface GetAllPostsRequestDTO {
   page: number;
   pageSize: number;
 }
+
+export interface CreatePostRequestDTO {
+  title: string;
+  description: string;
+  link: string;
+  postDate: string;
+  expireDate: string;
+  tags: string[];
+}

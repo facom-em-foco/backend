@@ -14,6 +14,18 @@ export default class PostController {
     this.postService = new PostService();
   }
 
+  async createPost(req: Request, res: Response): Promise<void> {
+    const { body, headers } = httpRequestHelper(req);
+
+    try {
+      const data = await this.postService.createPost(body);
+
+      sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
+    } catch (error) {
+      sendErrorResponse(res, error, headers);
+    }
+  }
+
   async getPostById(req: Request, res: Response): Promise<void> {
     const { params, headers } = httpRequestHelper(req);
 
