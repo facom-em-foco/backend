@@ -25,4 +25,16 @@ export default class PostController {
       sendErrorResponse(res, error, headers);
     }
   }
+
+  async getAllPosts(req: Request, res: Response): Promise<void> {
+    const { query, headers } = httpRequestHelper(req);
+
+    try {
+      const data = await this.postService.getByAllPosts(query);
+
+      sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
+    } catch (error) {
+      sendErrorResponse(res, error, headers);
+    }
+  }
 }

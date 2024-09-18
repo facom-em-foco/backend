@@ -12,3 +12,11 @@ export interface GetPostByIdResponseDTO {
   creationDate: string;
   editionDate: string;
 }
+
+export interface GetAllPostsResponseDTO {
+  totalItems: number;
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+  data: GetPostByIdResponseDTO[];
+}
