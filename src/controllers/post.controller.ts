@@ -26,13 +26,13 @@ export default class PostController {
     }
   }
 
-  async editPost(req: Request, res: Response): Promise<void> {
+  async editPostById(req: Request, res: Response): Promise<void> {
     const { body, params, headers } = httpRequestHelper(req);
 
     const requestParams = { ...body, ...params };
 
     try {
-      const data = await this.postService.editPost(requestParams);
+      const data = await this.postService.editPostById(requestParams);
 
       sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
     } catch (error) {
@@ -57,6 +57,18 @@ export default class PostController {
 
     try {
       const data = await this.postService.getByAllPosts(query);
+
+      sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
+    } catch (error) {
+      sendErrorResponse(res, error, headers);
+    }
+  }
+
+  async deletePostById(req: Request, res: Response): Promise<void> {
+    const { params, headers } = httpRequestHelper(req);
+
+    try {
+      const data = await this.postService.deletePostById(params);
 
       sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
     } catch (error) {

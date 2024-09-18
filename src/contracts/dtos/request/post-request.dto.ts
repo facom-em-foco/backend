@@ -21,3 +21,7 @@ export interface CreatePostRequestDTO {
 export interface EditPostRequestDTO extends CreatePostRequestDTO {
   id: string;
 }
+
+export interface DeletePostRequestDTO {
+  id: string;
+}

@@ -1,12 +1,14 @@
 import PostParser from '@/parsers/post.parser';
 import {
   CreatePostRequestDTO,
+  DeletePostRequestDTO,
   EditPostRequestDTO,
   GetAllPostsRequestDTO,
   GetPostByIdRequestDTO,
 } from '@/contracts/dtos/request/post-request.dto';
 import {
   CreatePostResponseDTO,
+  DeletePostResponseDTO,
   EditPostResponseDTO,
   GetAllPostsResponseDTO,
   GetPostByIdResponseDTO,
@@ -19,7 +21,7 @@ export default class PostService {
     return parserPostResponse(data);
   }
 
-  async editPost(data: EditPostRequestDTO): Promise<EditPostResponseDTO> {
+  async editPostById(data: EditPostRequestDTO): Promise<EditPostResponseDTO> {
     const { parserPostResponse } = PostParser;
 
     return parserPostResponse(data);
@@ -34,6 +36,14 @@ export default class PostService {
   }
 
   async getById(data: GetPostByIdRequestDTO): Promise<GetPostByIdResponseDTO> {
+    const { parserPostResponse } = PostParser;
+
+    return parserPostResponse(data);
+  }
+
+  async deletePostById(
+    data: DeletePostRequestDTO,
+  ): Promise<DeletePostResponseDTO> {
     const { parserPostResponse } = PostParser;
 
     return parserPostResponse(data);
