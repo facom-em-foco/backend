@@ -1,19 +1,17 @@
-import { GetAllTagsRequestDTO } from "@/contracts/dtos/request/tags-request.dto";
-import { GetAllTagsResponseDTO } from "@/contracts/dtos/request/tags-request.dto";
-import { GetTagsByIdRequestDTO } from "@/contracts/dtos/request/tags-request.dto";
-import { GetTagsByIdResponseDTO } from "@/contracts/dtos/request/tags-request.dto";
-import TagParser from "@/parsers/tag-parser";
+import { GetTagByIdRequestDTO } from '@/contracts/dtos/request/tags-request.dto';
+import { GetTagByIdResponseDTO } from '@/contracts/dtos/response/tags-response.dto';
+import TagParser from '@/parsers/tag-parser';
 
 export default class TagService {
-    async getById(data: GetTagsByIdRequestDTO): Promise<GetTagsByIdResponseDTO> {
-        const { parserTagResponse } = TagParser;
+  async getById(data: GetTagByIdRequestDTO): Promise<GetTagByIdResponseDTO> {
+    const { parserTagResponse } = TagParser;
 
-        return parserTagResponse(data);
-    }
+    return parserTagResponse(data);
+  }
 
-    async getAll(data: GetAllTagsRequestDTO): Promise<GetAllTagsResponseDTO> {
-        const { parserTagResponse } = TagParser;
+  async getAll(data: GetTagByIdRequestDTO): Promise<GetTagByIdResponseDTO[]> {
+    const { parserAllTagsResponse } = TagParser;
 
-        return parserTagResponse(data);
-    }
+    return parserAllTagsResponse(data);
+  }
 }
