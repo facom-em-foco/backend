@@ -1,9 +1,13 @@
-import { GetAllTagsResponseDTO } from "@/contracts/dtos/request/tags-request.dto";
-import { GetTagsByIdResponseDTO } from "@/contracts/dtos/request/tags-request.dto";
-
+import { GetTagByIdResponseDTO } from '@/contracts/dtos/response/tags-response.dto';
+import getAllTagsResponse from '@/contracts/mocks/get-all-tags-response.json';
+import getTagResponse from '@/contracts/mocks/get-tag-response.json';
 
 export default class TagParser {
-    static parserTagResponse(data: any): GetTagsByIdResponseDTO | GetAllTagsResponseDTO {
-        return data;
-    }
+  static parserTagResponse(data: any): GetTagByIdResponseDTO {
+    return getTagResponse;
+  }
+
+  static parserAllTagsResponse(data: any): GetTagByIdResponseDTO[] {
+    return getAllTagsResponse;
+  }
 }
