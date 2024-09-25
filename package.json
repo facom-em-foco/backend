@@ -11,7 +11,9 @@
     "start:dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
     "dkr:start": "docker compose up --build",
     "dkr:dev": "docker compose up app",
-    "dkr:down": "docker compose down -v"
+    "dkr:down": "docker compose down -v",
+    "migration:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate src/migrations/InitialMigration -d src/data-source.ts",
+    "migration:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/data-source.ts"
   },
   "keywords": [],
   "author": "",
