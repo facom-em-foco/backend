@@ -11,7 +11,9 @@
     "start:dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
     "dkr:start": "docker compose up --build",
     "dkr:dev": "docker compose up app",
-    "dkr:down": "docker compose down -v"
+    "dkr:down": "docker compose down -v",
+    "migration:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate src/migrations/InitialMigration -d src/data-source.ts",
+    "migration:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/data-source.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,14 +21,18 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "pg": "^8.13.0",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/lodash": "^4.17.7",
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.6.1",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.2"
   }
 }
