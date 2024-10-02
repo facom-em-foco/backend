@@ -13,18 +13,41 @@ import {
   GetAllPostsResponseDTO,
   GetPostByIdResponseDTO,
 } from '@/contracts/dtos/response/post-response.dto';
+import { PostRepository } from '@/repositories/post.repository';
+import { Post } from '@/entities/Post';
+import TagService from './tag.service';
+import UserService from './user.service';
 
 export default class PostService {
-  async createPost(data: CreatePostRequestDTO): Promise<CreatePostResponseDTO> {
-    const { parserPostResponse } = PostParser;
+  private postRepository: PostRepository;
+  private tagService: TagService;
+  private userService: UserService;
 
-    return parserPostResponse(data);
+  constructor() {
+    this.postRepository = new PostRepository();
+    this.tagService = new TagService();
+    this.userService = new UserService();
+  }
+
+  async createPost(data: CreatePostRequestDTO): Promise<CreatePostResponseDTO> {
+    const { parserCreatePost, parserPostResponse } = PostParser;
+
+    const tags = await this.tagService.validateTags(data.tags);
+    const publisher = await this.userService.getPublisherByEmail(
+      data.publisherEmail,
+    );
+
+    const post = parserCreatePost(data, tags, publisher);
+
+    const createdPost = await this.postRepository.create(post);
+
+    return parserPostResponse(createdPost);
   }
 
   async editPostById(data: EditPostRequestDTO): Promise<EditPostResponseDTO> {
     const { parserPostResponse } = PostParser;
 
-    return parserPostResponse(data);
+    return parserPostResponse(new Post());
   }
 
   async getByAllPosts(
@@ -38,7 +61,7 @@ export default class PostService {
   async getById(data: GetPostByIdRequestDTO): Promise<GetPostByIdResponseDTO> {
     const { parserPostResponse } = PostParser;
 
-    return parserPostResponse(data);
+    return parserPostResponse(new Post());
   }
 
   async deletePostById(
@@ -46,6 +69,6 @@ export default class PostService {
   ): Promise<DeletePostResponseDTO> {
     const { parserPostResponse } = PostParser;
 
-    return parserPostResponse(data);
+    return parserPostResponse(new Post());
   }
 }

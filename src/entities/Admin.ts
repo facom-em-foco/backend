@@ -1,12 +1,12 @@
-import { Entity, PrimaryColumn, OneToOne, JoinColumn } from "typeorm";
-import { Publisher } from "./Publisher";
+import { Entity, OneToOne, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Publisher } from './Publisher';
 
 @Entity()
 export class Admin {
-    @PrimaryColumn()
-    id!: number;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @OneToOne(() => Publisher)
-    @JoinColumn()
-    publisher!: Publisher;
+  @OneToOne(() => Publisher)
+  @JoinColumn()
+  publisher!: Publisher;
 }

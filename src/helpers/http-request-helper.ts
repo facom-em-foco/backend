@@ -8,6 +8,7 @@ export const httpRequestHelper = (req: Request): HttpRequest => {
     headers: req.headers,
     params: req.params,
     method: req.method,
+    file: req.file,
   };
 
   return httpRequest;

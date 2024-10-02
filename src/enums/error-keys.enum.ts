@@ -1,3 +1,6 @@
 export enum ErrorKeysEnum {
   EXTERNAL_ERROR = 999,
+  PARAMS_VALIDATION = 1000,
+  TAG_NOT_FOUND = 1001,
+  PUBLISHER_NOT_FOUND = 1002,
 }
