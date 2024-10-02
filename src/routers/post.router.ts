@@ -1,16 +1,26 @@
 import { Router } from 'express';
 import PostController from '@/controllers/post.controller';
 import multer from 'multer';
-import { multerConfig } from '@/multer-config';
+import { multerConfig, fileFilter } from '@/multer-config';
 
-const { POST_IMAGE_PATH = '', POST_FILE_NAME = '' } = process.env;
+const {
+  POST_IMAGE_PATH = '',
+  POST_FILE_NAME = '',
+  POST_FILE_LIMIT = 5,
+} = process.env;
 
 const postController = new PostController();
 const postRouter = Router();
 
 const storage = multerConfig(POST_IMAGE_PATH, POST_FILE_NAME);
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: +POST_FILE_LIMIT * 1024 * 1024, // Megabytes
+  },
+  fileFilter,
+});
 
 postRouter.post(
   '/post',

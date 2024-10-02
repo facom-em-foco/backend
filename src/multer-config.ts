@@ -31,6 +31,18 @@ export const removeFile = (filePath: string) => {
   });
 };
 
+export const fileFilter = (
+  req: any,
+  file: Express.Multer.File,
+  cb: multer.FileFilterCallback,
+) => {
+  const fileTypes = /jpeg|jpg|png|gif/;
+  if (fileTypes.test(file.mimetype)) {
+    return cb(null, true);
+  }
+  cb(new Error('File type is not accepted'));
+};
+
 export const multerConfig = (imagePath?: string, fileName?: string) => {
   const uploadFolder = imagePath || '';
   const uploadFile = fileName || '';
