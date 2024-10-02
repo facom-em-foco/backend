@@ -3,12 +3,12 @@ import PostController from '@/controllers/post.controller';
 import multer from 'multer';
 import { multerConfig } from '@/multer-config';
 
-const { POST_IMAGE_PATH = '' } = process.env;
+const { POST_IMAGE_PATH = '', POST_FILE_NAME = '' } = process.env;
 
 const postController = new PostController();
 const postRouter = Router();
 
-const storage = multerConfig(POST_IMAGE_PATH, 'post_img');
+const storage = multerConfig(POST_IMAGE_PATH, POST_FILE_NAME);
 
 const upload = multer({ storage });
 
