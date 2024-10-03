@@ -37,21 +37,21 @@ export default class PostParser {
   }
 
   static parserPostResponse(data: Post): GetPostByIdResponseDTO {
-    const { formatDate } = PostParser;
+    const { formatDate, formatString } = PostParser;
 
-    const tags = data.tags?.map(tag => tag.tagTitle);
+    const tags = data.tags?.map(tag => tag.tagTitle) || [];
 
     return {
-      postId: String(data.id),
+      postId: formatString(data.id),
       title: data.title,
-      description: data.textContent,
-      link: data.link,
+      description: formatString(data.textContent),
+      link: formatString(data.link),
       postDate: formatDate(data.dateInfo?.postDate),
       expireDate: formatDate(data.dateInfo?.expireDate),
       tags,
-      imagePath: data.imagePath,
-      publisherId: String(data.publisher?.id),
-      publisherName: data.publisher?.name,
+      imagePath: formatString(data.imagePath),
+      publisherId: formatString(data.publisher?.id),
+      publisherName: formatString(data.publisher?.name),
       creationDate: formatDate(data.dateInfo?.createdAt),
       editionDate: formatDate(data.dateInfo?.modifiedAt),
     };
@@ -63,5 +63,9 @@ export default class PostParser {
 
   static formatDate(date?: Date) {
     return date ? format(date, 'yyyy-MM-dd') : '';
+  }
+
+  static formatString(data?: any) {
+    return data ? `${data}` : '';
   }
 }

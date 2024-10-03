@@ -17,6 +17,9 @@ import { PostRepository } from '@/repositories/post.repository';
 import { Post } from '@/entities/Post';
 import TagService from './tag.service';
 import UserService from './user.service';
+import { HttpStatusCode } from '@/enums/http-status-code.enum';
+import { ErrorNotification } from '@/contracts/api/error-notification';
+import { ErrorKeysEnum } from '@/enums/error-keys.enum';
 
 export default class PostService {
   private postRepository: PostRepository;
@@ -31,6 +34,8 @@ export default class PostService {
 
   async createPost(data: CreatePostRequestDTO): Promise<CreatePostResponseDTO> {
     const { parserCreatePost, parserPostResponse } = PostParser;
+
+    console.log('Teste', data);
 
     const tags = await this.tagService.validateTags(data.tags);
     const publisher = await this.userService.getPublisherByEmail(
@@ -61,7 +66,18 @@ export default class PostService {
   async getById(data: GetPostByIdRequestDTO): Promise<GetPostByIdResponseDTO> {
     const { parserPostResponse } = PostParser;
 
-    return parserPostResponse(new Post());
+    const post = await this.postRepository.findById(+data.id);
+
+    if (!post) {
+      throw new ErrorNotification({
+        message: 'Post not found!',
+        errorKey: ErrorKeysEnum.TAG_NOT_FOUND,
+        errorDescription: 'Post not found',
+        status: HttpStatusCode.NOT_FOUND,
+      });
+    }
+
+    return parserPostResponse(post);
   }
 
   async deletePostById(
