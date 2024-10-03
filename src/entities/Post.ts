@@ -17,7 +17,7 @@ export class Post {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(() => Publisher, { nullable: true })
+  @ManyToOne(() => Publisher, { eager: true })
   publisher!: Publisher;
 
   @Column()
@@ -29,14 +29,14 @@ export class Post {
   @Column({ nullable: true })
   imagePath!: string;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   textContent!: string;
 
-  @OneToOne(() => DateInfo, { cascade: true })
+  @OneToOne(() => DateInfo, { cascade: true, eager: true })
   @JoinColumn()
   dateInfo!: DateInfo;
 
-  @ManyToMany(() => Tag, tag => tag.posts, { nullable: true })
+  @ManyToMany(() => Tag, tag => tag.posts, { eager: true })
   @JoinTable({
     name: 'post_tag',
     joinColumn: {
