@@ -9,7 +9,6 @@ import { ApiError } from '../interfaces/types/api-error.type';
 import { ErrorKeysEnum } from '../enums/error-keys.enum';
 import { ErrorNotification } from '../contracts/api/error-notification';
 import { Response } from 'express';
-import { Console } from 'console';
 
 const defaultSuccessResponse = { success: true };
 

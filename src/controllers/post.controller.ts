@@ -33,7 +33,6 @@ export default class PostController {
 
       sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
     } catch (error) {
-      console.log('TesteError', error);
       await removeFile(imagePath);
       sendErrorResponse(res, error, headers);
     }
