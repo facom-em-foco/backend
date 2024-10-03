@@ -35,8 +35,6 @@ export default class PostService {
   async createPost(data: CreatePostRequestDTO): Promise<CreatePostResponseDTO> {
     const { parserCreatePost, parserPostResponse } = PostParser;
 
-    console.log('Teste', data);
-
     const tags = await this.tagService.validateTags(data.tags);
     const publisher = await this.userService.getPublisherByEmail(
       data.publisherEmail,

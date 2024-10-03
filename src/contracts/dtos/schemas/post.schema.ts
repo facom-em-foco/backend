@@ -1,6 +1,5 @@
+import { dateTimeRegex, isValidDate } from '@/helpers/date-helper';
 import * as Yup from 'yup';
-
-const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
 export const CreatePostSchema = Yup.object()
   .shape({
@@ -28,10 +27,33 @@ export const CreatePostSchema = Yup.object()
       ),
     postDate: Yup.string()
       .required('postDate is required')
-      .matches(dateRegex, 'postDate must be in the format YYYY-MM-DD'),
+      .matches(
+        dateTimeRegex,
+        'postDate must be in the format YYYY-MM-DD or YYYY-MM-DD HH:mm:ss',
+      )
+      .test('is-valid-date', 'postDate is not a valid date', isValidDate),
     expireDate: Yup.string()
       .optional()
-      .matches(dateRegex, 'expireDate must be in the format YYYY-MM-DD'),
+      .matches(
+        dateTimeRegex,
+        'expireDate must be in the format YYYY-MM-DD or YYYY-MM-DD HH:mm:ss',
+      )
+      .test('is-valid-date', 'expireDate is not a valid date', value =>
+        value ? isValidDate(value) : true,
+      )
+      .test(
+        'is-greater',
+        'expireDate must be greater than or equal to postDate',
+        function (value) {
+          const { postDate } = this.parent;
+          if (!value || !postDate) return true;
+
+          const postDateTime = new Date(postDate);
+          const expireDateTime = new Date(value);
+
+          return expireDateTime >= postDateTime;
+        },
+      ),
     tags: Yup.array()
       .min(1, 'At least one tag is required')
       .required('tags are required'),
