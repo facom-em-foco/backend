@@ -4,10 +4,12 @@ export type HttpRequest<
   QueryT = any,
   ParamsT = any,
   MethodT = any,
+  FileT = any,
 > = {
   body: BodyT;
   headers?: HeadersT;
   query?: QueryT;
   params?: ParamsT;
   method?: MethodT;
+  file?: FileT;
 };

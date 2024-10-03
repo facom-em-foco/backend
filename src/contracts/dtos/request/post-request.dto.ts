@@ -16,6 +16,8 @@ export interface CreatePostRequestDTO {
   postDate: string;
   expireDate: string;
   tags: string[];
+  imagePath: string;
+  publisherEmail: string;
 }
 
 export interface EditPostRequestDTO extends CreatePostRequestDTO {

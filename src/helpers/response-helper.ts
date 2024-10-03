@@ -78,6 +78,7 @@ export const sendErrorResponse = (
     error,
     headers,
   );
+
   res.status(response.status);
   res.header(response.headers);
   res.send(response.data);

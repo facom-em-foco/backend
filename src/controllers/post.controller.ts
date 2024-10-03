@@ -6,6 +6,11 @@ import {
   sendSuccessResponse,
 } from '@/helpers/response-helper';
 import PostService from '@/services/post.service';
+import { CreatePostSchema } from '@/contracts/dtos/schemas/post.schema';
+import { ErrorNotification } from '@/contracts/api/error-notification';
+import { RequestValidator } from '@/contracts/api/request-validator';
+import { removeFile } from '@/multer-config';
+import { remove } from 'lodash';
 
 export default class PostController {
   private postService: PostService;
@@ -15,13 +20,20 @@ export default class PostController {
   }
 
   async createPost(req: Request, res: Response): Promise<void> {
-    const { body, headers } = httpRequestHelper(req);
-
+    const { body, file, headers } = httpRequestHelper(req);
+    const imagePath = file?.path || '';
     try {
-      const data = await this.postService.createPost(body);
+      const tags = body?.tags?.split(',') || [];
+      const publisherEmail = res.locals?.user || '';
+      const params = { ...body, imagePath, tags, publisherEmail };
+
+      await new RequestValidator(headers).validate(params, CreatePostSchema);
+
+      const data = await this.postService.createPost(params);
 
       sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
     } catch (error) {
+      await removeFile(imagePath);
       sendErrorResponse(res, error, headers);
     }
   }

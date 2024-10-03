@@ -1,24 +1,42 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
-import { Post } from "./Post";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Post } from './Post';
 
 @Entity()
 export class DateInfo {
-    @PrimaryGeneratedColumn()
-    id!: number;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @OneToOne(() => Post)
-    @JoinColumn()
-    post!: Post;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  postDate!: Date;
 
-    @Column()
-    createdAt!: Date;
+  @Column({ nullable: true })
+  expireDate!: Date;
 
-    @Column({ nullable: true })
-    modifiedAt!: Date;
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt!: Date;
 
-    @Column({ nullable: true })
-    postDate!: Date;
+  @UpdateDateColumn({ type: 'timestamp' })
+  modifiedAt!: Date;
 
-    @Column({ nullable: true })
-    expireDate!: Date;
+  constructor(
+    id?: number,
+    postDate?: Date,
+    expireDate?: Date,
+    createdAt?: Date,
+    modifiedAt?: Date,
+  ) {
+    this.id = id ?? this.id;
+    this.postDate = postDate ?? this.postDate;
+    this.expireDate = expireDate ?? this.expireDate;
+    this.createdAt = createdAt ?? this.createdAt;
+    this.modifiedAt = modifiedAt ?? this.modifiedAt;
+  }
 }
