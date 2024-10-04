@@ -3,4 +3,5 @@ export enum ErrorKeysEnum {
   PARAMS_VALIDATION = 1000,
   TAG_NOT_FOUND = 1001,
   PUBLISHER_NOT_FOUND = 1002,
+  POST_NOT_FOUND = 1003,
 }

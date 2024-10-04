@@ -6,11 +6,12 @@ import {
   sendSuccessResponse,
 } from '@/helpers/response-helper';
 import PostService from '@/services/post.service';
-import { CreatePostSchema } from '@/contracts/dtos/schemas/post.schema';
-import { ErrorNotification } from '@/contracts/api/error-notification';
+import {
+  CreatePostSchema,
+  GetPostByIdSchema,
+} from '@/contracts/dtos/schemas/post.schema';
 import { RequestValidator } from '@/contracts/api/request-validator';
 import { removeFile } from '@/multer-config';
-import { remove } from 'lodash';
 
 export default class PostController {
   private postService: PostService;
@@ -56,6 +57,8 @@ export default class PostController {
     const { params, headers } = httpRequestHelper(req);
 
     try {
+      await new RequestValidator(headers).validate(params, GetPostByIdSchema);
+
       const data = await this.postService.getById(params);
 
       sendSuccessResponse(res, data, headers, HttpStatusCode.OK);

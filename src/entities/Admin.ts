@@ -6,7 +6,7 @@ export class Admin {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @OneToOne(() => Publisher)
+  @OneToOne(() => Publisher, { eager: true })
   @JoinColumn()
   publisher!: Publisher;
 }

@@ -1,13 +1,13 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InitialMigration1727816625096 implements MigrationInterface {
-    name = 'InitialMigration1727816625096'
+export class InitialMigration1727919272528 implements MigrationInterface {
+    name = 'InitialMigration1727919272528'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "user" ("id" SERIAL NOT NULL, "followedTags" integer array, CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "publisher" ("id" integer NOT NULL, "name" character varying NOT NULL, "emailAddress" character varying NOT NULL, "registeredAt" TIMESTAMP NOT NULL DEFAULT now(), "active" boolean NOT NULL DEFAULT true, "userId" integer, CONSTRAINT "REL_edf47a1a1a6c9fca862a12ba07" UNIQUE ("userId"), CONSTRAINT "PK_70a5936b43177f76161724da3e6" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "date_info" ("id" SERIAL NOT NULL, "postDate" TIMESTAMP NOT NULL DEFAULT now(), "expireDate" TIMESTAMP, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "modifiedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_4a4a19230d36b4721f88fa2d9f3" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "post" ("id" SERIAL NOT NULL, "title" character varying NOT NULL, "link" character varying, "imagePath" character varying, "textContent" text NOT NULL, "publisherId" integer, "dateInfoId" integer, CONSTRAINT "REL_c2c0b17fabeb2f11793023bf05" UNIQUE ("dateInfoId"), CONSTRAINT "PK_be5fda3aac270b134ff9c21cdee" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "post" ("id" SERIAL NOT NULL, "title" character varying NOT NULL, "link" character varying, "imagePath" character varying, "textContent" text, "publisherId" integer, "dateInfoId" integer, CONSTRAINT "REL_c2c0b17fabeb2f11793023bf05" UNIQUE ("dateInfoId"), CONSTRAINT "PK_be5fda3aac270b134ff9c21cdee" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "tag" ("id" SERIAL NOT NULL, "tagName" character varying NOT NULL, "tagTitle" character varying NOT NULL, CONSTRAINT "UQ_e7ae313c248bc6c050b7475568f" UNIQUE ("tagTitle"), CONSTRAINT "PK_8e4052373c579afc1471f526760" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "admin" ("id" SERIAL NOT NULL, "publisherId" integer, CONSTRAINT "REL_293699681e8d6a4b0962750887" UNIQUE ("publisherId"), CONSTRAINT "PK_e032310bcef831fb83101899b10" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "post_tag" ("postId" integer NOT NULL, "tagId" integer NOT NULL, CONSTRAINT "PK_7e4fae2ea901c7c38a0e431d2b3" PRIMARY KEY ("postId", "tagId"))`);
