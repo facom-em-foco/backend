@@ -71,7 +71,7 @@ export default class PostController {
     const { query, headers } = httpRequestHelper(req);
 
     try {
-      const data = await this.postService.getByAllPosts(query);
+      const data = await this.postService.getAllPosts(query);
 
       sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
     } catch (error) {

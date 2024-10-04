@@ -53,12 +53,20 @@ export default class PostService {
     return parserPostResponse(new Post());
   }
 
-  async getByAllPosts(
+  async getAllPosts(
     data: GetAllPostsRequestDTO,
   ): Promise<GetAllPostsResponseDTO> {
-    const { parserAllPostsResponse } = PostParser;
+    const { parserPostResponse } = PostParser;
 
-    return parserAllPostsResponse(data);
+    const posts = await this.postRepository.getAllPosts(data);
+
+    return {
+      totalItems: posts.length,
+      currentPage: data.page,
+      pageSize: data.pageSize,
+      totalPages: Math.ceil(posts.length / data.pageSize),
+      data: posts.map(parserPostResponse),
+    };
   }
 
   async getById(data: GetPostByIdRequestDTO): Promise<GetPostByIdResponseDTO> {
