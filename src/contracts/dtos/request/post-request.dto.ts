@@ -3,8 +3,8 @@ export interface GetPostByIdRequestDTO {
 }
 
 export interface GetAllPostsRequestDTO {
-  ids?: string[];
-  publisherId?: string;
+  ids?: number[];
+  publisherId?: number;
   dateRange?: string[];
   tags?: string[];
   page : number;

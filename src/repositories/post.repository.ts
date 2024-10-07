@@ -8,7 +8,7 @@ export class PostRepository extends BaseRepository<Post> {
   }
 
   async getAllPosts(params?: GetAllPostsRequestDTO): Promise<Post[]> {
-    const { ids, publisherId, dateRange, tags } = params ?? {};
+    const { ids, publisherId, dateRange, tags, page, pageSize } = params ?? {};
     const query = this.repository.createQueryBuilder('post');
 
     if (ids) {
@@ -27,6 +27,9 @@ export class PostRepository extends BaseRepository<Post> {
       query.innerJoin('post.tags', 'tag').andWhere('tag.tagName IN (:...tags)', {
         tags,
       });
+    }
+    if (page && pageSize) {
+      query.skip((page - 1) * pageSize).take(pageSize);
     }
     return query.getMany();
   }
