@@ -7,30 +7,38 @@ export class PostRepository extends BaseRepository<Post> {
     super(Post);
   }
 
-  async getAllPosts(params?: GetAllPostsRequestDTO): Promise<Post[]> {
-    const { ids, publisherId, dateRange, tags, page, pageSize } = params ?? {};
-    const query = this.repository.createQueryBuilder('post');
+  async getAllPosts(request: GetAllPostsRequestDTO): Promise<Post[]> {
+    const { ids, publisherId, dateRange, tags, page, pageSize } = request;
+    const query = this.repository.createQueryBuilder('post')
+      .leftJoinAndSelect('post.publisher', 'publisher')
+      .leftJoinAndSelect('post.dateInfo', 'dateInfo')
+      .leftJoinAndSelect('post.tags', 'tags');
 
-    if (ids) {
-      query.andWhere('post.id IN (:...ids)', { ids: ids.map(Number) });
+    if (ids && ids.length > 0) {
+      query.andWhere('post.id IN (:...ids)', { ids });
     }
+
     if (publisherId) {
-      query.andWhere('post.publisher.id = :publisherId', { publisherId: Number(publisherId) });
+      query.andWhere('post.publisherId = :publisherId', { publisherId });
     }
-    if (dateRange && dateRange.length === 2) {
-      query.andWhere('post.dateInfo.postDate BETWEEN :startDate AND :endDate', {
-        startDate: new Date(dateRange[0]),
-        endDate: new Date(dateRange[1]),
-      });
+
+    if (dateRange) {
+      if (dateRange.start) {
+        query.andWhere('dateInfo.postDate >= :startDate', { startDate: dateRange.start });
+      }
+      if (dateRange.end) {
+        query.andWhere('dateInfo.postDate <= :endDate', { endDate: dateRange.end });
+      }
     }
-    if (tags) {
-      query.innerJoin('post.tags', 'tag').andWhere('tag.tagName IN (:...tags)', {
-        tags,
-      });
+
+    if (tags && tags.length > 0) {
+      query.andWhere('tags.id IN (:...tagIds)', { tagIds: tags });
     }
+
     if (page && pageSize) {
       query.skip((page - 1) * pageSize).take(pageSize);
     }
+
     return query.getMany();
   }
 }
