@@ -8,10 +8,12 @@ import {
 import PostService from '@/services/post.service';
 import {
   CreatePostSchema,
+  EditPostSchema,
   GetPostByIdSchema,
 } from '@/contracts/dtos/schemas/post.schema';
 import { RequestValidator } from '@/contracts/api/request-validator';
 import { removeFile } from '@/multer-config';
+import { splitBy } from '@/helpers/array-helper';
 
 export default class PostController {
   private postService: PostService;
@@ -22,15 +24,15 @@ export default class PostController {
 
   async createPost(req: Request, res: Response): Promise<void> {
     const { body, file, headers } = httpRequestHelper(req);
-    const imagePath = file?.path || '';
+    const imagePath = file?.filename || '';
     try {
-      const tags = body?.tags?.split(',') || [];
+      const tags = splitBy(body?.tags, ',');
       const publisherEmail = res.locals?.user || '';
-      const params = { ...body, imagePath, tags, publisherEmail };
+      const payload = { ...body, imagePath, tags, publisherEmail };
 
-      await new RequestValidator(headers).validate(params, CreatePostSchema);
+      await new RequestValidator(headers).validate(payload, CreatePostSchema);
 
-      const data = await this.postService.createPost(params);
+      const data = await this.postService.createPost(payload);
 
       sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
     } catch (error) {
@@ -40,15 +42,21 @@ export default class PostController {
   }
 
   async editPostById(req: Request, res: Response): Promise<void> {
-    const { body, params, headers } = httpRequestHelper(req);
-
-    const requestParams = { ...body, ...params };
+    const { body, params, file, headers } = httpRequestHelper(req);
+    const imagePath = file?.filename || undefined;
 
     try {
-      const data = await this.postService.editPostById(requestParams);
+      const tags =
+        body?.tags !== undefined ? splitBy(body.tags, ',') : body?.tags;
+      const payload = { ...body, ...params, imagePath, tags };
+
+      await new RequestValidator(headers).validate(payload, EditPostSchema);
+
+      const data = await this.postService.editPostById(payload);
 
       sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
     } catch (error) {
+      await removeFile(imagePath);
       sendErrorResponse(res, error, headers);
     }
   }
