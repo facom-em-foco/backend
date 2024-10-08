@@ -5,11 +5,12 @@ export interface GetPostByIdRequestDTO {
 export interface GetAllPostsRequestDTO {
   ids?: string[];
   publisherId?: string;
-  dateRange?: { start: string; end: string };
+  initialDate?: string;
+  finalDate?: string;
   tags?: string[];
-  page: number;
-  pageSize: number;
-  
+  page?: number;
+  pageSize?: number;
+  s?: string;
 }
 
 export interface CreatePostRequestDTO {

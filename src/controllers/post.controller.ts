@@ -8,6 +8,7 @@ import {
 import PostService from '@/services/post.service';
 import {
   CreatePostSchema,
+  GetAllPostsSchema,
   GetPostByIdSchema,
 } from '@/contracts/dtos/schemas/post.schema';
 import { RequestValidator } from '@/contracts/api/request-validator';
@@ -70,11 +71,18 @@ export default class PostController {
   async getAllPosts(req: Request, res: Response): Promise<void> {
     const { query, headers } = httpRequestHelper(req);
 
+    const ids = query?.ids ? query?.ids?.split(',') : [];
+    const tags = query?.tags ? query?.tags?.split(',') : [];
+    const params = { ...query, ids, tags };
+
     try {
-      const data = await this.postService.getAllPosts(query);
+      await new RequestValidator(headers).validate(params, GetAllPostsSchema);
+
+      const data = await this.postService.getAllPosts(params);
 
       sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
     } catch (error) {
+      console.log('TesteError', error);
       sendErrorResponse(res, error, headers);
     }
   }

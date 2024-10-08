@@ -1,3 +1,4 @@
+import { GetAllPostsPaginationDTO } from '@/contracts/dtos/response/post-response.dto';
 import { Post } from '../entities/Post';
 import { BaseRepository } from './base.repository';
 import { GetAllPostsRequestDTO } from '@/contracts/dtos/request/post-request.dto';
@@ -7,9 +8,22 @@ export class PostRepository extends BaseRepository<Post> {
     super(Post);
   }
 
-  async getAllPosts(request: GetAllPostsRequestDTO): Promise<Post[]> {
-    const { ids, publisherId, dateRange, tags, page, pageSize } = request;
-    const query = this.repository.createQueryBuilder('post')
+  async getAllPosts(
+    request: GetAllPostsRequestDTO,
+  ): Promise<GetAllPostsPaginationDTO> {
+    const {
+      ids,
+      publisherId,
+      initialDate,
+      finalDate,
+      tags,
+      page = 1,
+      pageSize = 10,
+      s: search,
+    } = request;
+
+    const query = this.repository
+      .createQueryBuilder('post')
       .leftJoinAndSelect('post.publisher', 'publisher')
       .leftJoinAndSelect('post.dateInfo', 'dateInfo')
       .leftJoinAndSelect('post.tags', 'tags');
@@ -22,23 +36,48 @@ export class PostRepository extends BaseRepository<Post> {
       query.andWhere('post.publisherId = :publisherId', { publisherId });
     }
 
-    if (dateRange) {
-      if (dateRange.start) {
-        query.andWhere('dateInfo.postDate >= :startDate', { startDate: dateRange.start });
-      }
-      if (dateRange.end) {
-        query.andWhere('dateInfo.postDate <= :endDate', { endDate: dateRange.end });
-      }
+    if (initialDate) {
+      query.andWhere('dateInfo.postDate >= :startDate', {
+        startDate: new Date(initialDate),
+      });
+    }
+
+    if (finalDate) {
+      query.andWhere('dateInfo.postDate <= :endDate', {
+        endDate: new Date(finalDate),
+      });
     }
 
     if (tags && tags.length > 0) {
-      query.andWhere('tags.id IN (:...tagIds)', { tagIds: tags });
+      query.andWhere('tags.tagTitle IN (:...tagTitles)', { tagTitles: tags });
     }
 
-    if (page && pageSize) {
-      query.skip((page - 1) * pageSize).take(pageSize);
+    if (search) {
+      query.andWhere(
+        '(post.title ILIKE :search OR post.textContent ILIKE :search)',
+        {
+          search: `%${search}%`,
+        },
+      );
     }
 
-    return query.getMany();
+    // Count total items without applying pagination
+    const totalItems = await query.getCount();
+
+    // Apply pagination
+    const posts = await query
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
+      .getMany();
+
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    return {
+      posts,
+      pageSize: +pageSize,
+      currentPage: +page,
+      totalItems,
+      totalPages,
+    };
   }
 }
