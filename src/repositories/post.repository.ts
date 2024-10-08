@@ -49,7 +49,18 @@ export class PostRepository extends BaseRepository<Post> {
     }
 
     if (tags && tags.length > 0) {
-      query.andWhere('tags.tagTitle IN (:...tagTitles)', { tagTitles: tags });
+      query.andWhere(
+        qb => {
+          const subQuery = qb
+            .subQuery()
+            .select('post.id')
+            .from(Post, 'post')
+            .leftJoin('post.tags', 'tag')
+            .where('tag.tagTitle IN (:...tagTitles)', { tagTitles: tags })
+            .getQuery();
+          return 'post.id IN ' + subQuery;
+        }
+      );
     }
 
     if (search) {
