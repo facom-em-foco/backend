@@ -4,7 +4,7 @@ import multer from 'multer';
 import { multerConfig, fileFilter } from '@/multer-config';
 
 const {
-  POST_IMAGE_PATH = '',
+  UPLOADS_PATH = './uploads',
   POST_FILE_NAME = '',
   POST_FILE_LIMIT = 5,
 } = process.env;
@@ -12,7 +12,7 @@ const {
 const postController = new PostController();
 const postRouter = Router();
 
-const storage = multerConfig(POST_IMAGE_PATH, POST_FILE_NAME);
+const storage = multerConfig(`.${UPLOADS_PATH}`, POST_FILE_NAME);
 
 const upload = multer({
   storage,
@@ -24,12 +24,16 @@ const upload = multer({
 
 postRouter.post(
   '/post',
-  upload.single('imagePath'),
+  upload.single('image'),
   postController.createPost.bind(postController),
 );
 postRouter.get('/post', postController.getAllPosts.bind(postController));
 postRouter.get('/post/:id', postController.getPostById.bind(postController));
-postRouter.patch('/post/:id', postController.editPostById.bind(postController));
+postRouter.patch(
+  '/post/:id',
+  upload.single('image'),
+  postController.editPostById.bind(postController),
+);
 postRouter.delete(
   '/post/:id',
   postController.deletePostById.bind(postController),

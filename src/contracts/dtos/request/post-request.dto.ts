@@ -20,8 +20,9 @@ export interface CreatePostRequestDTO {
   publisherEmail: string;
 }
 
-export interface EditPostRequestDTO extends CreatePostRequestDTO {
+export interface EditPostRequestDTO extends Partial<CreatePostRequestDTO> {
   id: string;
+  removeImg: string;
 }
 
 export interface DeletePostRequestDTO {
