@@ -88,6 +88,8 @@ export default class PostParser {
 
     const tags = data.tags?.map(tag => tag.tagTitle) || [];
 
+    console.log('Teste', data);
+
     return {
       postId: formatString(data.id),
       title: data.title,
