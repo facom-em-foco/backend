@@ -8,7 +8,7 @@ export class BaseRepository<T extends ObjectLiteral> {
     this.repository = AppDataSource.getRepository(entity);
   }
 
-  async create(data: DeepPartial<T>): Promise<T> {
+  async save(data: DeepPartial<T>): Promise<T> {
     return this.repository.save(data);
   }
 

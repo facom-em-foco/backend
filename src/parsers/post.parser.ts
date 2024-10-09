@@ -5,7 +5,10 @@ import {
 } from '@/contracts/dtos/response/post-response.dto';
 import getAllPostsResponse from '@/contracts/mocks/get-all-posts-response.json';
 import { Post } from '@/entities/Post';
-import { CreatePostRequestDTO } from '@/contracts/dtos/request/post-request.dto';
+import {
+  CreatePostRequestDTO,
+  EditPostRequestDTO,
+} from '@/contracts/dtos/request/post-request.dto';
 import { Tag } from '@/entities/Tag';
 import { DateInfo } from '@/entities/DateInfo';
 import { format } from 'date-fns';
@@ -14,6 +17,7 @@ import {
   formatDateTime,
   formatDateWithoutTimeZone,
 } from '@/helpers/date-helper';
+import { removeUndefinedProps } from '@/helpers/object-helper';
 
 export default class PostParser {
   static parserCreatePost(
@@ -45,8 +49,42 @@ export default class PostParser {
     );
   }
 
+  static parserEditPost(
+    post: Post,
+    data: EditPostRequestDTO,
+    tags?: Tag[],
+  ): Post {
+    const postDate = formatDateWithoutTimeZone(data.postDate) || undefined;
+    const expireDate = formatDateWithoutTimeZone(data.expireDate) || undefined;
+    const imagePath =
+      data.removeImg?.toLowerCase() === 'true' ? '' : data.imagePath;
+
+    let dateInfo = removeUndefinedProps(
+      new DateInfo(undefined, postDate, expireDate),
+    );
+
+    // Update post.dateInfo with dateInfo data
+    dateInfo = Object.assign({ ...post.dateInfo }, dateInfo);
+
+    const editPost = removeUndefinedProps(
+      new Post(
+        undefined,
+        undefined,
+        data.title,
+        data.link,
+        imagePath,
+        data.description,
+        dateInfo,
+        tags,
+      ),
+    );
+
+    // Update post with editPost data
+    return Object.assign({ ...post }, editPost);
+  }
+
   static parserPostResponse(data: Post): GetPostByIdResponseDTO {
-    const { formatString } = PostParser;
+    const { formatString, formatImagePath } = PostParser;
 
     const tags = data.tags?.map(tag => tag.tagTitle) || [];
 
@@ -58,7 +96,7 @@ export default class PostParser {
       postDate: formatDateTime(data.dateInfo?.postDate),
       expireDate: formatDateTime(data.dateInfo?.expireDate),
       tags,
-      imagePath: formatString(data.imagePath),
+      imagePath: formatImagePath(data.imagePath),
       publisherId: formatString(data.publisher?.id),
       publisherName: formatString(data.publisher?.name),
       creationDate: formatDateTime(data.dateInfo?.createdAt),
@@ -83,5 +121,11 @@ export default class PostParser {
 
   static formatString(data?: any) {
     return data ? `${data}` : '';
+  }
+
+  static formatImagePath(data?: any) {
+    const { UPLOADS_PATH = '/uploads' } = process.env;
+
+    return data ? `${UPLOADS_PATH}/${data}` : '';
   }
 }

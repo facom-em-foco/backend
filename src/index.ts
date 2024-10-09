@@ -11,11 +11,14 @@ import { checkAccessToken } from './helpers/middlewares-helper';
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
+const UPLOADS_PATH = process.env.UPLOADS_PATH || '/uploads';
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(UPLOADS_PATH, express.static(`.${UPLOADS_PATH}`));
 
 // Middlewares
 app.use(checkAccessToken);
