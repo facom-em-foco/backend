@@ -25,7 +25,7 @@ export class BaseRepository<T extends ObjectLiteral> {
     return this.findById(id);
   }
 
-  async delete(id: number): Promise<void> {
-    await this.repository.delete(id);
+  async remove(entity: T): Promise<void> {
+    await this.repository.remove(entity);
   }
 }

@@ -18,7 +18,7 @@ const getExtensionFromMimeType = (mimetype: string): string => {
 
 export const removeFile = (filePath: string) => {
   return new Promise<void>((resolve, reject) => {
-    if (filePath) {
+    if (filePath && fs.existsSync(filePath)) {
       fs.unlink(filePath, err => {
         if (err) {
           reject(err);

@@ -26,6 +26,10 @@ export class DateInfo {
   @UpdateDateColumn({ type: 'timestamp' })
   modifiedAt!: Date;
 
+  @OneToOne(() => Post, post => post.dateInfo, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  post!: Post;
+
   constructor(
     id?: number,
     postDate?: Date,

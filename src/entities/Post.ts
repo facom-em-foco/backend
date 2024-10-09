@@ -32,8 +32,11 @@ export class Post {
   @Column('text', { nullable: true })
   textContent!: string;
 
-  @OneToOne(() => DateInfo, { cascade: true, eager: true })
-  @JoinColumn()
+  @OneToOne(() => DateInfo, dateinfo => dateinfo.post, {
+    onDelete: 'CASCADE',
+    cascade: ['insert', 'update'],
+    eager: true,
+  })
   dateInfo!: DateInfo;
 
   @ManyToMany(() => Tag, tag => tag.posts, { eager: true })

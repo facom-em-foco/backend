@@ -23,11 +23,15 @@ import { ErrorKeysEnum } from '@/enums/error-keys.enum';
 import { removeFile } from '@/multer-config';
 
 export default class PostService {
+  private UPLOADS_PATH: string;
+
   private postRepository: PostRepository;
   private tagService: TagService;
   private userService: UserService;
 
   constructor() {
+    this.UPLOADS_PATH = process.env.UPLOADS_PATH || '/uploads';
+
     this.postRepository = new PostRepository();
     this.tagService = new TagService();
     this.userService = new UserService();
@@ -49,7 +53,6 @@ export default class PostService {
   }
 
   async editPostById(data: EditPostRequestDTO): Promise<EditPostResponseDTO> {
-    const { UPLOADS_PATH = '/uploads' } = process.env;
     const { parserEditPost, parserPostResponse } = PostParser;
 
     const tags = data.tags
@@ -61,7 +64,7 @@ export default class PostService {
     if (!post) {
       throw new ErrorNotification({
         message: 'Post not found!',
-        errorKey: ErrorKeysEnum.TAG_NOT_FOUND,
+        errorKey: ErrorKeysEnum.POST_NOT_FOUND,
         errorDescription: 'No post found to edit',
         status: HttpStatusCode.NOT_FOUND,
       });
@@ -87,7 +90,7 @@ export default class PostService {
 
     // Remove old image
     if (post.imagePath !== editedPost.imagePath) {
-      await removeFile(`.${UPLOADS_PATH}/${post.imagePath}`);
+      await removeFile(`.${this.UPLOADS_PATH}/${post.imagePath}`);
     }
 
     return parserPostResponse(editedPost);
@@ -111,7 +114,7 @@ export default class PostService {
     if (!post) {
       throw new ErrorNotification({
         message: 'Post not found!',
-        errorKey: ErrorKeysEnum.TAG_NOT_FOUND,
+        errorKey: ErrorKeysEnum.POST_NOT_FOUND,
         errorDescription: 'Post not found',
         status: HttpStatusCode.NOT_FOUND,
       });
@@ -125,6 +128,25 @@ export default class PostService {
   ): Promise<DeletePostResponseDTO> {
     const { parserPostResponse } = PostParser;
 
-    return parserPostResponse(new Post());
+    const post = await this.postRepository.findById(+data.id);
+
+    if (!post) {
+      throw new ErrorNotification({
+        message: 'Post not found!',
+        errorKey: ErrorKeysEnum.POST_NOT_FOUND,
+        errorDescription: 'Post not found to delete',
+        status: HttpStatusCode.NOT_FOUND,
+      });
+    }
+
+    const postResponse = parserPostResponse(post);
+
+    await this.postRepository.remove(post);
+
+    if (post.imagePath) {
+      await removeFile(`.${this.UPLOADS_PATH}/${post.imagePath}`);
+    }
+
+    return postResponse;
   }
 }
