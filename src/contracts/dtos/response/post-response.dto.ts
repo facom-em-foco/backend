@@ -1,3 +1,5 @@
+import { Post } from '@/entities/Post';
+
 export interface GetPostByIdResponseDTO {
   postId: string;
   title: string;
@@ -18,7 +20,16 @@ export interface GetAllPostsResponseDTO {
   currentPage: number;
   pageSize: number;
   totalPages: number;
+  currentPageItems: number;
   data: GetPostByIdResponseDTO[];
+}
+
+export interface GetAllPostsPaginationDTO {
+  totalItems: number;
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+  posts: Post[];
 }
 
 export interface CreatePostResponseDTO extends GetPostByIdResponseDTO {}

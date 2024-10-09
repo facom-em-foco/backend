@@ -1,4 +1,5 @@
 import { dateTimeRegex, isValidDate } from '@/helpers/date-helper';
+import { isNotEmpty } from '@/helpers/string-helper';
 import * as Yup from 'yup';
 
 export const CreatePostSchema = Yup.object()
@@ -76,6 +77,25 @@ export const CreatePostSchema = Yup.object()
 export const GetPostByIdSchema = Yup.object().shape({
   id: Yup.string().required('id is required'),
 });
+
+export const GetAllPostsSchema = Yup.object().shape({
+  initialDate: Yup.string()
+    .optional()
+    .test('matches', 'initialDate must be in the format YYYY-MM-DD', value =>
+      isNotEmpty(value) ? Boolean(value?.match(dateTimeRegex)) : true,
+    )
+    .test('is-valid-date', 'initialDate is not a valid date', value =>
+      isNotEmpty(value) ? isValidDate(value) : true,
+    ),
+  finalDate: Yup.string()
+    .optional()
+    .test('matches', 'finalDate must be in the format YYYY-MM-DD', value =>
+      isNotEmpty(value) ? Boolean(value?.match(dateTimeRegex)) : true,
+    )
+    .test('is-valid-date', 'finalDate is not a valid date', value =>
+      isNotEmpty(value) ? isValidDate(value) : true,
+    ),
+});  
 
 export const EditPostSchema = Yup.object().shape({
   id: Yup.string().required('id is required'),

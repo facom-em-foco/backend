@@ -93,12 +93,14 @@ export default class PostService {
     return parserPostResponse(editedPost);
   }
 
-  async getByAllPosts(
+  async getAllPosts(
     data: GetAllPostsRequestDTO,
   ): Promise<GetAllPostsResponseDTO> {
     const { parserAllPostsResponse } = PostParser;
 
-    return parserAllPostsResponse(data);
+    const posts = await this.postRepository.getAllPosts(data);
+
+    return parserAllPostsResponse(posts);
   }
 
   async getById(data: GetPostByIdRequestDTO): Promise<GetPostByIdResponseDTO> {

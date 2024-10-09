@@ -1,4 +1,5 @@
 import {
+  GetAllPostsPaginationDTO,
   GetAllPostsResponseDTO,
   GetPostByIdResponseDTO,
 } from '@/contracts/dtos/response/post-response.dto';
@@ -103,8 +104,19 @@ export default class PostParser {
     };
   }
 
-  static parserAllPostsResponse(data: any): GetAllPostsResponseDTO {
-    return getAllPostsResponse;
+  static parserAllPostsResponse(
+    data: GetAllPostsPaginationDTO,
+  ): GetAllPostsResponseDTO {
+    const { parserPostResponse } = PostParser;
+
+    return {
+      totalItems: data.totalItems,
+      currentPage: data.currentPage,
+      pageSize: data.pageSize,
+      totalPages: data.totalPages,
+      currentPageItems: data.posts?.length || 0,
+      data: data.posts.map(parserPostResponse),
+    };
   }
 
   static formatString(data?: any) {
