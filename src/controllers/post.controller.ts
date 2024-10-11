@@ -35,7 +35,7 @@ export default class PostController {
 
       const data = await this.postService.createPost(payload);
 
-      sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
+      sendSuccessResponse(res, data, headers, HttpStatusCode.CREATED);
     } catch (error) {
       await removeFile(imagePath);
       sendErrorResponse(res, error, headers);
@@ -79,8 +79,8 @@ export default class PostController {
   async getAllPosts(req: Request, res: Response): Promise<void> {
     const { query, headers } = httpRequestHelper(req);
 
-    const ids = query?.ids ? query?.ids?.split(',') : [];
-    const tags = query?.tags ? query?.tags?.split(',') : [];
+    const ids = splitBy(query?.ids, ',');
+    const tags = splitBy(query?.tags, ',');
     const params = { ...query, ids, tags };
 
     try {
@@ -103,6 +103,7 @@ export default class PostController {
 
       sendSuccessResponse(res, data, headers, HttpStatusCode.OK);
     } catch (error) {
+      console.log('TesteError', error);
       sendErrorResponse(res, error, headers);
     }
   }
